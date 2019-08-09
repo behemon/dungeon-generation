@@ -1,4 +1,9 @@
 # dungeon-generation
+
+imports
+pip install tcod
+pip install ordereddict
+
 A simple demonstration of various roguelike dungeon generation algorithms.
 
 This program is a collection of the most common or most talked about dungeon generation algorithms used in roguelikes, and a simple UI using the libtcod (Doryen Library) API, written in python.
