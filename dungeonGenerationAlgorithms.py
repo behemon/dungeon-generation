@@ -315,16 +315,16 @@ class TunnelingAlgorithm:
 					# connect to the previous room
 
 					#center coordinates of the previous room
-					(prev_x, prev_y) = rooms[num_rooms-1].center()
 
+					(prev_x, prev_y) = rooms[num_rooms-1].center()
 					# 50% chance that a tunnel will start horizontally
 					if random.randint(0,1) == 1:
-						self.createHorTunnel(prev_x, new_x, prev_y)
-						self.createVirTunnel(prev_y, new_y, new_x)
+						self.createHorTunnel(int(prev_x), int(new_x), int(prev_y))
+						self.createVirTunnel(int(prev_y), int(new_y), int(new_x))
 
 					else: # else it starts virtically
-						self.createVirTunnel(prev_y, new_y, prev_x)
-						self.createHorTunnel(prev_x, new_x, new_y)
+						self.createVirTunnel(int(prev_y), int(new_y), int(new_x))
+						self.createHorTunnel(int(prev_x), int(new_x), int(prev_y))
 
 				# append the new room to the list
 				rooms.append(new_room)
@@ -398,12 +398,12 @@ class BSPTree:
 		x2, y2 = room2.center()
 		# 50% chance that a tunnel will start horizontally
 		if random.randint(0,1) == 1:
-			self.createHorTunnel(x1, x2, y1)
-			self.createVirTunnel(y1, y2, x2)
+			self.createHorTunnel(int(x1), int(x2), int(y1))
+			self.createVirTunnel(int(y1), int(y2), int(x2))
 
 		else: # else it starts virtically
-			self.createVirTunnel(y1, y2, x1)
-			self.createHorTunnel(x1, x2, y2)
+			self.createVirTunnel(int(y1), int(y2), int(x1))
+			self.createHorTunnel(int(x1), int(x2), int(y2))
 
 	def createHorTunnel(self, x1, x2, y):
 		for x in range(min(x1,x2),max(x1,x2)+1):
@@ -436,7 +436,7 @@ class DrunkardsWalk:
 		self.drunkardY = random.randint(2,mapHeight-2)
 		self.filledGoal = mapWidth*mapHeight*self._percentGoal
 
-		for i in xrange(self.walkIterations):
+		for i in range(self.walkIterations):
 			self.walk(mapWidth, mapHeight)
 			if (self._filled >= self.filledGoal):
 				break
@@ -556,7 +556,7 @@ class CellularAutomata:
 
 	def createCaves(self,mapWidth,mapHeight):
 		# ==== Create distinct caves ====
-		for i in xrange (0,self.iterations):
+		for i in range (0,self.iterations):
 			# Pick a random point with a buffer around the edges of the map
 			tileX = random.randint(1,mapWidth-2) #(2,mapWidth-3)
 			tileY = random.randint(1,mapHeight-2) #(2,mapHeight-3)
@@ -573,7 +573,7 @@ class CellularAutomata:
 
 	def cleanUpMap(self,mapWidth,mapHeight):
 		if (self.smoothEdges):
-			for i in xrange (0,5):
+			for i in range (0,5):
 				# Look at each cell individually and check for smoothness
 				for x in range(1,mapWidth-1):
 					for y in range (1,mapHeight-1):
@@ -727,7 +727,7 @@ class CellularAutomata:
 					for nextPoint in nextCave: break # get an element from cave1
 					# compare distance of point1 to old and new point2
 					newDistance = self.distanceFormula(point1,nextPoint)
-					if (newDistance < distance) or distance == None:
+					if distance is None or (newDistance < distance) :
 						point2 = nextPoint
 						distance = newDistance
 
@@ -869,28 +869,28 @@ class RoomAddition:
 		return room
 
 	def generateRoomCross(self):
-		roomHorWidth = (random.randint(self.CROSS_ROOM_MIN_SIZE+2,self.CROSS_ROOM_MAX_SIZE))/2*2
+		roomHorWidth = int((random.randint(self.CROSS_ROOM_MIN_SIZE+2,self.CROSS_ROOM_MAX_SIZE))/2*2)
 
-		roomVirHeight = (random.randint(self.CROSS_ROOM_MIN_SIZE+2,self.CROSS_ROOM_MAX_SIZE))/2*2
+		roomVirHeight = int((random.randint(self.CROSS_ROOM_MIN_SIZE+2,self.CROSS_ROOM_MAX_SIZE))/2*2)
 
-		roomHorHeight = (random.randint(self.CROSS_ROOM_MIN_SIZE,roomVirHeight-2))/2*2
+		roomHorHeight = int((random.randint(self.CROSS_ROOM_MIN_SIZE,roomVirHeight-2))/2*2)
 
-		roomVirWidth = (random.randint(self.CROSS_ROOM_MIN_SIZE,roomHorWidth-2))/2*2
+		roomVirWidth = int((random.randint(self.CROSS_ROOM_MIN_SIZE,roomHorWidth-2))/2*2)
 
 		room = [[1
-			for y in xrange(roomVirHeight)]
-				for x in xrange(roomHorWidth)]
+			for y in range(roomVirHeight)]
+				for x in range(roomHorWidth)]
 
 		# Fill in horizontal space
-		virOffset = roomVirHeight/2 - roomHorHeight/2
-		for y in xrange(virOffset,roomHorHeight+virOffset):
-			for x in xrange(0,roomHorWidth):
+		virOffset = int(roomVirHeight/2 - roomHorHeight/2)
+		for y in range(virOffset,roomHorHeight+virOffset):
+			for x in range(0,roomHorWidth):
 				room[x][y] = 0
 
 		# Fill in virtical space
-		horOffset = roomHorWidth/2 - roomVirWidth/2
-		for y in xrange(0,roomVirHeight):
-			for x in xrange(horOffset,roomVirWidth+horOffset):
+		horOffset = int(roomHorWidth/2 - roomVirWidth/2)
+		for y in range(0,roomVirHeight):
+			for x in range(horOffset,roomVirWidth+horOffset):
 				room[x][y] = 0
 
 		return room
@@ -1031,7 +1031,7 @@ class RoomAddition:
 		roomWidth, roomHeight = self.getRoomDimensions(room)
 
 		# try n times to find a wall that lets you build room in that direction
-		for i in xrange(self.placeRoomAttempts):
+		for i in range(self.placeRoomAttempts):
 			# try to place the room against the tile, else connected by a tunnel of length i
 
 			wallTile = None
@@ -1066,7 +1066,7 @@ class RoomAddition:
 					startRoomY = wallTile[1] - y
 
 			#then slide it until it doesn't touch anything
-			for tunnelLength in xrange(self.maxTunnelLength):
+			for tunnelLength in range(self.maxTunnelLength):
 				possibleRoomX = startRoomX + direction[0]*tunnelLength
 				possibleRoomY = startRoomY + direction[1]*tunnelLength
 
@@ -1095,7 +1095,7 @@ class RoomAddition:
 		for x in range (roomWidth):
 			for y in range (roomHeight):
 				if room[x][y] == 0:
-					self.level[roomX+x][roomY+y] = 0
+					self.level[int(roomX)+x][int(roomY)+y] = 0
 
 		self.rooms.append(room)
 
@@ -1203,7 +1203,7 @@ class RoomAddition:
 		libtcodMap = libtcod.map_new(mapWidth,mapHeight)
 		self.recomputePathMap(mapWidth,mapHeight,libtcodMap)
 
-		for i in xrange(self.shortcutAttempts):
+		for i in range(self.shortcutAttempts):
 			# check i times for places where shortcuts can be made
 			while True:
 				#Pick a random floor tile
@@ -1217,8 +1217,8 @@ class RoomAddition:
 						break
 
 			# look around the tile for other floor tiles
-			for x in xrange(-1,2):
-				for y in xrange(-1,2):
+			for x in range(-1,2):
+				for y in range(-1,2):
 					if x != 0 or y != 0: # Exclude the center tile
 						newX = floorX + (x*self.shortcutLength)
 						newY = floorY + (y*self.shortcutLength)
@@ -1239,8 +1239,8 @@ class RoomAddition:
 		libtcod.path_delete(pathMap)
 
 	def recomputePathMap(self,mapWidth,mapHeight,libtcodMap):
-		for x in xrange(mapWidth):
-			for y in xrange(mapHeight):
+		for x in range(mapWidth):
+			for y in range(mapHeight):
 				if self.level[x][y] == 1:
 					libtcod.map_set_properties(libtcodMap,x,y,False,False)
 				else:
@@ -1249,12 +1249,12 @@ class RoomAddition:
 	def carveShortcut(self,x1,y1,x2,y2):
 		if x1-x2 == 0:
 			# Carve virtical tunnel
-			for y in xrange(min(y1,y2),max(y1,y2)+1):
+			for y in range(min(y1,y2),max(y1,y2)+1):
 				self.level[x1][y] = 0
 
 		elif y1-y2 == 0:
 			# Carve Horizontal tunnel
-			for x in xrange(min(x1,x2),max(x1,x2)+1):
+			for x in range(min(x1,x2),max(x1,x2)+1):
 				self.level[x][y1] = 0
 
 		elif (y1-y2)/(x1-x2) == 1:
@@ -1363,7 +1363,7 @@ class CityWalls:
 				wallX = room.x1 +1
 				wallY = y
 
-			self.level[wallX][wallY] = 0
+			self.level[int(wallX)][int(wallY)] = 0
 
 	def createHall(self, room1, room2):
 		# This method actually creates a list of rooms,
@@ -1514,11 +1514,11 @@ class MazeWithRooms:
 		west = (-1,0)
 
 		connectorRegions = [[ None
-			for y in xrange(mapHeight)]
-				for x in xrange(mapWidth)]
+			for y in range(mapHeight)]
+				for x in range(mapWidth)]
 
-		for x in xrange(1,mapWidth-1):
-			for y in xrange(1,mapHeight-1):
+		for x in range(1,mapWidth-1):
+			for y in range(1,mapHeight-1):
 				if self.level[x][y] != 1: continue
 
 				# count the number of different regions the wall tile is touching
@@ -1537,8 +1537,8 @@ class MazeWithRooms:
 
 		# make a list of all of the connectors
 		connectors = set()
-		for x in xrange(0,mapWidth):
-			for y in xrange(0,mapHeight):
+		for x in range(0,mapWidth):
+			for y in range(0,mapHeight):
 				if connectorRegions[x][y]:
 					connectorPosition = (x,y)
 					connectors.add(connectorPosition)
@@ -1546,7 +1546,7 @@ class MazeWithRooms:
 		# keep track of the regions that have been merged.
 		merged = {}
 		openRegions = set()
-		for i in xrange(self._currentRegion+1):
+		for i in range(self._currentRegion+1):
 			merged[i] = i
 			openRegions.add(i)
 
@@ -1579,7 +1579,7 @@ class MazeWithRooms:
 			previously been merged with the ones we are
 			connecting now.
 			'''
-			for i in xrange(self._currentRegion+1):
+			for i in range(self._currentRegion+1):
 				if merged[i] in sources:
 					merged[i] = dest
 
@@ -1616,8 +1616,8 @@ class MazeWithRooms:
 
 	def createRoom(self, room):
 		# set all tiles within a rectangle to 0
-		for x in range(room.x1, room.x2):
-			for y in range(room.y1, room.y2):
+		for x in range(int(room.x1), int(room.x2)):
+			for y in range(int(room.y1), int(room.y2)):
 				self.carve(x,y)
 
 	def addJunction(self,pos):
@@ -1634,8 +1634,8 @@ class MazeWithRooms:
 		while not done:
 			done = True
 
-			for y in xrange(1,mapHeight):
-				for x in xrange(1,mapWidth):
+			for y in range(1,mapHeight):
+				for x in range(1,mapWidth):
 					if self.level[x][y] == 0:
 						
 						exits = 0
@@ -1786,15 +1786,15 @@ class MessyBSPTree:
 			if (0 < drunkardX+dx < self.mapWidth-1) and (0 < drunkardY+dy < self.mapHeight-1):
 				drunkardX += dx
 				drunkardY += dy
-				if self.level[drunkardX][drunkardY] == 1:
-					self.level[drunkardX][drunkardY] = 0
+				if self.level[int(drunkardX)][int(drunkardY)] == 1:
+					self.level[int(drunkardX)][int(drunkardY)] = 0
 
 	def cleanUpMap(self,mapWidth,mapHeight):
 		if (self.smoothEdges):
-			for i in xrange (3):
+			for i in range (3):
 				# Look at each cell individually and check for smoothness
-				for x in xrange(1,mapWidth-1):
-					for y in xrange (1,mapHeight-1):
+				for x in range(1,mapWidth-1):
+					for y in range (1,mapHeight-1):
 						if (self.level[x][y] == 1) and (self.getAdjacentWallsSimple(x,y) <= self.smoothing):
 							self.level[x][y] = 0
 
