@@ -16,7 +16,7 @@ each of the algorithm classes to be easily portable into other
 projects. My success in that reguard is up for debate.
 '''
 
-import libtcodpy as libtcod
+import tcod as libtcod
 import random
 from math import sqrt
 from collections import OrderedDict
@@ -36,9 +36,9 @@ class UserInterface:
 	def __init__(self):
 		libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 		libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'Roguelike Dungeon Comparison', False) #TODO: Change Game Name
-		self.con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
+		self.con = libtcod.console.Console(SCREEN_WIDTH, SCREEN_HEIGHT)
 		
-		self.textBox = libtcod.console_new(SCREEN_WIDTH,TEXTBOX_HEIGHT)
+		self.textBox = libtcod.console.Console(SCREEN_WIDTH,TEXTBOX_HEIGHT)
 		self.helpText = OrderedDict([
 		("1","Tunneling Algorithm"),
 		("2","BSP Tree Algorithm"),
